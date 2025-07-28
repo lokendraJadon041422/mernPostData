@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "development") {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.resolve(__dirname, './public')));
-
+app.use(express.static(path.resolve(__dirname, './my-client/dist')));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -40,7 +40,9 @@ app.get("/api/v1/test", (req, res) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users",authMiddleware,userRouter)
 app.use("/api/v1/jobs",authMiddleware,jobRouter);
-
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './my-client/dist', 'index.html'));
+});
 app.use('*', (req, res) => {
     res.status(400).json({
         message: "Page not found",

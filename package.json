@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup-project": "npm i && cd my-client && npm i",
+    "setup-production-app": "npm i && cd my-client && npm i && npm run build",
     "server": "nodemon server",
     "client": "cd my-client && npm run dev",
     "dev": "concurrently --kill-others-on-fail \" npm run server\" \" cd my-client && npm run dev\""

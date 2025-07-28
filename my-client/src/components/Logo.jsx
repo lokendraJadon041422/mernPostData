@@ -4,7 +4,7 @@ import logo from '../assets/logo.svg'
 const Logo = () => {
   return (
     <div>
-      <img src={logo} alt='jobify' className='logo' />
+      <img src={logo} alt='post your data' className='logo' />
     </div>
   )
 }
