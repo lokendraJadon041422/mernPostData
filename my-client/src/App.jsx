@@ -12,6 +12,16 @@ import { action as EditJobAction } from './pages/EditJob'
 import { loader as AdminLoader } from './pages/Admin'
 import { action as ProfileAction } from './pages/Profile'
 import { loader as StatsLoader } from './pages/Stats'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 function App() {
 const router = createBrowserRouter([
   {
@@ -31,19 +41,19 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
-        action:LoginAction
+        action:LoginAction(queryClient)
       },
       {
         path: "dashboard",
-        element: <DashboardLayout />,
-        loader:DashboardLayoutLoader,
+        element: <DashboardLayout queryClient={queryClient} />,
+        loader:DashboardLayoutLoader(queryClient),
         children: [
           {
             index: true,
             element: <AddJob />,
             action:AddJobAction
           },
-          { path: 'stats', element: <Stats />, loader:StatsLoader },
+          { path: 'stats', element: <Stats />, loader:StatsLoader(queryClient) },
           {
             path: 'all-jobs',
             element: <AllJobs />,
@@ -53,7 +63,7 @@ const router = createBrowserRouter([
           {
             path: 'profile',
             element: <Profile />,
-            action:ProfileAction
+            action:ProfileAction(queryClient)
           },
           {
             path: 'admin',
@@ -73,7 +83,10 @@ const router = createBrowserRouter([
 ])
   return (
     <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
+    </QueryClientProvider>
     </>
   )
 }

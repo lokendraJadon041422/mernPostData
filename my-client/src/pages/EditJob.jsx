@@ -38,9 +38,6 @@ export const action = async ({request, params}) => {
 }
 const EditJob = () => {
     const job = useLoaderData();
-    const isSubmitting = useNavigation().state === 'submitting';
-    const navigate = useNavigate();
-    // console.log(job);
   return (
     <Wrapper>
       <Form method='post' className='form'>

@@ -8,6 +8,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import cloudinary from "cloudinary";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 dotenv.config();
 const app = express();
 
@@ -16,7 +18,6 @@ import jobRouter from "./routes/jobRouter.js";
 import authRouter from "./routes/authRouter.js";
 import { errorHandlerMiddleware } from "./middlewares/errorMiddleware.js";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
-import { checkForTestUser } from "./middlewares/authMiddleware.js";
 import userRouter from "./routes/userRoutes.js";
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -34,9 +35,9 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET,
 })
 const PORT = process.env.PORT || 3000;
-app.get("/api/v1/test", (req, res) => {
-    res.json({ message: "Test" });
-});
+app.use(helmet());
+app.use(mongoSanitize());
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users",authMiddleware,userRouter)
 app.use("/api/v1/jobs",authMiddleware,jobRouter);

@@ -10,9 +10,8 @@ import {Submit} from '../components';
 //   const { currentUser } = useDashboardContext()
 //   return currentUser
 // } 
-export const action = async ({request}) => {
+export const action =(queryClient) => async ({request}) => {
   const formData = await request.formData();
-
   const file = formData.get('avatar');
   if (file && file.size > 500000) {
     showToast('Image size too large','error');
@@ -21,36 +20,17 @@ export const action = async ({request}) => {
 
   try {
     await createAxios.patch('/users/update-user', formData);
+    queryClient.invalidateQueries(['currentUser']);
     showToast('Profile updated successfully','success');
   } catch (error) {
     showToast(error?.response?.data?.msg,'error');
   }
   return null;
-  // try {
-  //   const formData = await request.formData();
-  //   const avatar = formData.get('avatar');
-  //   if (avatar && avatar.size > 500000) {
-  //     showToast('Image size too large','error');
-  //     return null;
-  //   }
-  //   const data = Object.fromEntries(formData);
-  // // console.log(data,formData)
-  //   const response= await createAxios.patch('/users/update-user', data,{headers:{'Content-Type':'multipart/form-data'}});
-  //   console.log(response)
-  //   // showToast('success', 'User updated successfully');
-  //   return null;
-  // } catch (error) {
-  //   console.log(error,'error')
-  //   showToast(error?.response?.data?.message,'error');
-  //   return null;
-  // }
 }
 
 
 const Profile = () => {
   const { currentUser } = useDashboardContext()
-  const navigation = useNavigation()
-  const isSubmitting = navigation.state === 'submitting'
 
   return (
     <Wrapper>

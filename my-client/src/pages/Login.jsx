@@ -7,11 +7,12 @@ import createAxios from '../utils/createAxios'
 import {redirect} from 'react-router-dom'
 import showToast from '../utils/ShowToastContainer'
 import {Submit} from '../components';
-export const action = async({request}) => {
+export const action =(queryClient) => async({request}) => {
     const formData = await request.formData();
     const data = Object.fromEntries(formData);
     try {
         await createAxios.post('/auth/login', data);
+        queryClient.invalidateQueries();
         showToast("User logged in successfully", "success");
         return redirect('/dashboard');
     } catch (error) {
